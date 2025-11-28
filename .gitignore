@@ -1,0 +1,32 @@
+# venv
+venv/
+.env
+*.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+
+# mypy / pyright / tests
+.mypy_cache/
+.pytest_cache/
+.pyright/
+
+# IDE / редакторы
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# alembic временные файлы (но не сами миграции!)
+alembic/*.pyc
+alembic/__pycache__/
+
+# MacOS
+.DS_Store
+
+# прочий мусор
+*.sqlite3
