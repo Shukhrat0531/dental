@@ -14,6 +14,7 @@ allowed_origins = [
     "http://localhost:5173",
     "http://localhost:8080",
     "https://dental.inbrain.kz",
+    "https://b1d6fa20-0f2f-4ff7-8ee9-ddb4fc2c4c3b.lovableproject.com"
 ]
 
 app.add_middleware(
