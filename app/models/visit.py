@@ -1,8 +1,10 @@
 import enum
 from datetime import datetime
-from sqlalchemy import String, DateTime, Float, ForeignKey, Enum
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from app.db.base import Base
+
+from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, Enum
+from sqlalchemy.orm import Mapped, mapped_column
+
+from app.db.base_class import Base
 
 
 class PaymentStatus(str, enum.Enum):
@@ -18,19 +20,36 @@ class VisitStatus(str, enum.Enum):
 
 
 class Visit(Base):
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    patient_id: Mapped[int] = mapped_column(ForeignKey("patient.id"))
-    dentist_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    __tablename__ = "visit"
 
-    procedure: Mapped[str] = mapped_column(String(255))
-    date: Mapped[datetime] = mapped_column(DateTime)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
 
-    total_amount: Mapped[float] = mapped_column(Float)
+    patient_id: Mapped[int] = mapped_column(ForeignKey("patient.id"), index=True)
+    dentist_id: Mapped[int] = mapped_column(ForeignKey("user.id"), index=True)
+
+    procedure_id: Mapped[int | None] = mapped_column(
+        ForeignKey("procedure.id"),
+        nullable=True,
+        index=True,
+    )
+    procedure: Mapped[str | None] = mapped_column(
+        String(255),
+        nullable=True,
+    )  # временно для совместимости
+
+    duration_minutes: Mapped[int | None] = mapped_column(Integer, nullable=True)
+
+    date: Mapped[datetime] = mapped_column(DateTime, index=True)
+
+    total_amount: Mapped[float | None] = mapped_column(Float, nullable=True)
     paid_amount: Mapped[float] = mapped_column(Float, default=0.0)
-    remaining: Mapped[float] = mapped_column(Float)
+    remaining: Mapped[float] = mapped_column(Float, default=0.0)
 
-    payment_status: Mapped[PaymentStatus] = mapped_column(Enum(PaymentStatus))
-    visit_status: Mapped[VisitStatus] = mapped_column(Enum(VisitStatus))
-
-    patient = relationship("Patient", backref="visits")
-    dentist = relationship("User", backref="visits")
+    payment_status: Mapped[PaymentStatus] = mapped_column(
+        Enum(PaymentStatus, name="payment_status"),
+        default=PaymentStatus.unpaid,
+    )
+    visit_status: Mapped[VisitStatus] = mapped_column(
+        Enum(VisitStatus, name="visit_status"),
+        default=VisitStatus.scheduled,
+    )

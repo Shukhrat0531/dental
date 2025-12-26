@@ -9,6 +9,12 @@ settings = get_settings()
 
 
 def hash_password(password: str) -> str:
+   
+    print("PASSWORD TYPE:", type(password))
+    print("PASSWORD LEN:", len(password))
+    print("PASSWORD VALUE:", repr(password))
+    return pwd_context.hash(password)
+
     return pwd_context.hash(password)
 
 
